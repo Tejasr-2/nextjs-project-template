@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../services/api.service';
 
 @Component({
   selector: 'app-request-builder',
@@ -14,6 +15,8 @@ export class RequestBuilderComponent {
   body = '';
   authType = 'None';
   authData: any = {};
+
+  constructor(private apiService: ApiService) {}
 
   addHeader() {
     this.headers.push({ key: '', value: '' });
@@ -32,7 +35,29 @@ export class RequestBuilderComponent {
   }
 
   sendRequest() {
-    // TODO: Implement sending request to backend API
-    console.log('Sending request:', this.selectedMethod, this.url);
+    const requestPayload = {
+      method: this.selectedMethod,
+      url: this.url,
+      headers: this.headers.reduce((acc, cur) => {
+        if (cur.key) acc[cur.key] = cur.value;
+        return acc;
+      }, {} as {[key: string]: string}),
+      params: this.params.reduce((acc, cur) => {
+        if (cur.key) acc[cur.key] = cur.value;
+        return acc;
+      }, {} as {[key: string]: string}),
+      body: this.body,
+      auth: this.authType !== 'None' ? this.authData : null
+    };
+
+    this.apiService.sendRequest(requestPayload).subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        // TODO: Pass response to ResponseViewerComponent
+      },
+      error: (error) => {
+        console.error('Error:', error);
+      }
+    });
   }
 }
