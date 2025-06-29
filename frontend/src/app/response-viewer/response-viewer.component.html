@@ -1,0 +1,47 @@
+<div class="response-viewer p-4 bg-gray-100 dark:bg-gray-900 rounded-md">
+  <div class="flex space-x-4 mb-2">
+    <div>Status: <span class="font-semibold">{{ statusCode }}</span></div>
+    <div>Time: <span class="font-semibold">{{ time }} ms</span></div>
+    <div>Size: <span class="font-semibold">{{ size }} bytes</span></div>
+  </div>
+
+  <div class="mb-2">
+    <button (click)="setViewMode('pretty')" [class.font-bold]="viewMode === 'pretty'">Pretty</button>
+    <button (click)="setViewMode('raw')" [class.font-bold]="viewMode === 'raw'">Raw</button>
+    <button (click)="setViewMode('preview')" [class.font-bold]="viewMode === 'preview'">Preview</button>
+  </div>
+
+  <div *ngIf="viewMode === 'pretty'">
+    <pre class="whitespace-pre-wrap">{{ prettyBody }}</pre>
+  </div>
+  <div *ngIf="viewMode === 'raw'">
+    <pre class="whitespace-pre-wrap">{{ body }}</pre>
+  </div>
+  <div *ngIf="viewMode === 'preview'">
+    <iframe [srcdoc]="body" class="w-full h-64 border"></iframe>
+  </div>
+
+  <div class="mt-4">
+    <h3 class="font-semibold mb-1">Cookies</h3>
+    <table class="w-full text-left border-collapse border border-gray-300">
+      <thead>
+        <tr>
+          <th class="border border-gray-300 p-1">Name</th>
+          <th class="border border-gray-300 p-1">Value</th>
+          <th class="border border-gray-300 p-1">Domain</th>
+          <th class="border border-gray-300 p-1">Path</th>
+          <th class="border border-gray-300 p-1">Expires</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cookie of cookies">
+          <td class="border border-gray-300 p-1">{{ cookie.name }}</td>
+          <td class="border border-gray-300 p-1">{{ cookie.value }}</td>
+          <td class="border border-gray-300 p-1">{{ cookie.domain }}</td>
+          <td class="border border-gray-300 p-1">{{ cookie.path }}</td>
+          <td class="border border-gray-300 p-1">{{ cookie.expires }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
